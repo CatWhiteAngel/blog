@@ -1,0 +1,17 @@
+# .github/dependabot.yml
+version: 2
+updates:
+  # npm 依赖:每月看一次,主题的大版本升级不要自动提
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    ignore:
+      - dependency-name: "hexo-theme-butterfly"
+        update-types: ["version-update:semver-major"]
+
+  # GitHub Actions 版本:workflow 里的 checkout/setup-node/lychee-action 等
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"

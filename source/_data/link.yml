@@ -1,0 +1,38 @@
+- class_name: 🤝 友情链接
+  class_desc: 一些很棒的朋友们
+  link_list:
+    - name: 暂无
+      link: https://example.com
+      avatar: https://example.com/avatar.jpg
+      descr: 欢迎联系，交换友链
+
+- class_name: ⚙️ 本站驱动
+  class_desc: 本站使用的技术与服务
+  link_list:
+
+    - name: 雨云
+      link: https://www.rainyun.com/MjU5OTc3_
+      avatar: https://forum.rainyun.com/uploads/default/optimized/2X/3/33f3aac4b4c598112be4a332b9e8e96a824148fa_2_32x32.png
+      descr: 新一代云服务提供商
+
+    - name: Hexo
+      link: https://hexo.io/zh-cn/
+      avatar: https://d33wubrfki0l68.cloudfront.net/6657ba50e702d84afb32fe846bed54fba1a77add/827ae/logo.svg
+      descr: 快速、简洁且高效的博客框架
+
+    - name: Butterfly
+      link: https://butterfly.js.org/
+      avatar: https://butterfly.js.org/img/avatar.png
+      descr: 一个现代、优雅且功能丰富的Hexo主题
+
+    - name: Mathcha
+      link: https://www.mathcha.io/
+      avatar: https://www.mathcha.io/image/notebook-icon.png
+      descr: 一种快速书写和分享数学内容的方法
+
+    - name: Waline
+      link: https://waline.js.org/
+      avatar: https://waline.js.org/logo.png
+      descr: 一款简洁、安全的评论系统
+
+      

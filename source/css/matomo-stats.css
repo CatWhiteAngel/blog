@@ -1,0 +1,68 @@
+/* Matomo Stats - Butterfly 主题统计样式 */
+/* 将此文件放入 Hexo 的 source/css/ 目录 */
+
+/* ====== 页脚站点统计 ====== */
+.matomo-site-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin: 0.8rem 0;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.matomo-site-stats .stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.matomo-site-stats .stat-icon {
+  font-size: 0.9em;
+}
+
+.matomo-site-stats .stat-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 1.5em;
+  text-align: center;
+}
+
+/* ====== 文章页访问量 ====== */
+.matomo-post-views {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85em;
+  color: #fff;
+  font-weight: 700;
+  opacity: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ====== 文章头部元信息（日期等）加粗白色 ====== */
+#post-meta,
+#post-meta .post-meta-date,
+#post-meta .post-meta-separator,
+#post-meta .post-meta-commentcount {
+  color: #fff;
+  font-weight: 700;
+  opacity: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.matomo-post-views .view-icon {
+  font-size: 1em;
+}
+
+.matomo-post-views .view-count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ====== 暗色模式适配 ====== */
+[data-theme="dark"] .matomo-site-stats,
+[data-theme="dark"] .matomo-post-views {
+  opacity: 0.85;
+}

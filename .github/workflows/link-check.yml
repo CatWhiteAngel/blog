@@ -1,0 +1,71 @@
+# 每周对构建产物做一次死链巡检,失败时开/更新一个 issue
+# 与部署完全独立:巡检失败不影响发文章
+name: Link Check
+
+on:
+  schedule:
+    # UTC 周日 18:00 ≈ 新西兰周一早上(NZST +12 / NZDT +13)
+    - cron: '0 18 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  linkcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 查的是构建产物(读者实际看到的链接),不是 Markdown 源码
+      - name: Build
+        run: npx hexo generate
+
+      # 结果缓存跨周复用:近期查过且正常的链接跳过
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: lychee-cache-${{ github.run_id }}
+          restore-keys: lychee-cache-
+
+      - name: Run lychee
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          fail: false
+          args: >-
+            --config lychee.toml
+            --root-dir "$GITHUB_WORKSPACE/public"
+            --cache
+            --max-cache-age 2w
+            'public/**/*.html'
+
+      # 有坏链时:已有未关闭的巡检 issue 就追加评论,没有才新开,避免每周刷屏
+      - name: Report broken links
+        if: steps.lychee.outputs.exit_code != 0
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          existing=$(gh issue list --label link-report --state open \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file ./lychee/out.md
+          else
+            gh issue create \
+              --title "link-report $(date -u +%F)" \
+              --label link-report \
+              --body-file ./lychee/out.md
+          fi

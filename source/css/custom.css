@@ -1,0 +1,52 @@
+/* 1. 彻底隐藏导航栏左侧的博客标题/Logo */
+#page-header #nav #blog-info {
+    display: none !important;
+}
+
+/* 2. 让导航菜单容器占据 100% 宽度，并将其内部元素绝对居中 */
+#page-header #nav #menus {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    /* 取消原有的右侧浮动或内边距限制 */
+    padding-right: 0 !important; 
+}
+
+/* 3. 确保菜单项本身（主页、归档等）在中央完美排列 */
+#page-header #nav .menus_items {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 4. 放大右侧菜单项的字号 */
+#page-header #nav .menus_items .menus_item .site-page {
+    font-size: 1.2rem !important; /* 默认大约是 0.8rem，这里调大 */
+}
+
+/* 5. 加大右侧菜单项之间的间距 */
+#page-header #nav .menus_items .menus_item {
+    margin: 0 1rem !important; /* 默认大约是 0.4rem，把左右间距拉开 */
+}
+
+/* 6. 覆盖主题默认的深色遮罩 */
+#page-header::before {
+    /* 这里的 0.2 就是透明度。0 代表完全没有遮罩（原图直出），1 代表纯黑。
+       主题默认通常在 0.5 左右。你可以改成 0.1、0.2 或 0.3 试试 */
+    background-color: rgba(0, 0, 0, 0) !important; 
+}
+
+#site-info #site-title {
+    /* 1. 调大字号：默认大约是 2.5rem。你可以尝试 3.5rem 甚至 4rem 感受一下冲击力 */
+    font-size: 3.5rem !important; 
+    
+    /* 2. 加粗字体：900 是 CSS 里最粗的级别，或者用 bold */
+    font-weight: 900 !important;  
+    
+    /* 3. 极客小妙招：文字阴影 (Text Shadow) */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6) !important;
+}
+
+#site_social_icons {
+  display: none !important;
+}

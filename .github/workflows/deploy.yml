@@ -1,0 +1,63 @@
+# push 到 main 后自动构建并 rsync 到服务器
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'source/**'
+      - 'scaffolds/**'
+      - '_config.yml'
+      - '_config.butterfly.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+# 同一时间只允许一个部署在跑;新 push 进来时取消还在排队/进行中的旧部署
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npx hexo generate
+
+      # 安全闸:构建产物异常(空目录/没有首页)就中止,
+      # 防止一次坏构建配合 rsync --delete 把线上站清空
+      - name: Sanity check build output
+        run: |
+          test -f public/index.html
+          test "$(find public -name '*.html' | wc -l)" -gt 1
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      # --chmod=D2750,F640 与服务器上原 post-receive 钩子的权限方案一致:
+      # 目录 setgid + 组可读,文件组可读、其他人无权限,nginx 走组权限读取
+      - name: Rsync to server
+        run: |
+          rsync -az --delete \
+            --chmod=D2750,F640 \
+            --exclude='.well-known' \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.DEPLOY_PORT }} -o UserKnownHostsFile=~/.ssh/known_hosts" \
+            public/ "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/"
