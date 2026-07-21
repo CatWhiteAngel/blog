@@ -55,6 +55,7 @@ code_blocks:
 social:
    fab fa-github: https://github.com/CatWhiteAngel || Github || '#24292e'
    fas fa-envelope: mailto:catwhiteangel@proton.me || Email || '#4a7dbe'
+   fa-solid fa-rss: /atom.xml || RSS || '#f38020'
 
 # --------------------------------------
 # Image Settings
