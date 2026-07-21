@@ -10,6 +10,3 @@ _multiconfig.yml
 
 # 本地草稿不进仓库
 source/_drafts/
-
-# 迁移方案文档（含服务器信息）不进仓库
-blogcicdmigrationplan.md
