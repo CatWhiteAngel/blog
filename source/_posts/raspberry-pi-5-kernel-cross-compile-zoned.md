@@ -1,11 +1,11 @@
 ---
-title: 树莓派 5 内核交叉编译速通：为 HM-SMR 硬盘启用 zoned 支持
+title: 树莓派 5 内核交叉编译速通——为 HM-SMR 硬盘启用 zoned 支持
 date: 2026-07-23 18:31:00
 tags: [Raspberry Pi, Kernel Compilation, Cross Compilation, SMR]
 categories: [Hardware]
 ---
 
-# 树莓派 5 内核交叉编译速通：为 HM-SMR 硬盘启用 zoned 支持
+# 树莓派 5 内核交叉编译速通——为 HM-SMR 硬盘启用 zoned 支持
 
 这是[Ultrastar DC HC620 分析与实战——树莓派 5 驱动主机管理式 SMR 硬盘](https://www.catwhiteangel.com/hc620-hm-smr-raspberry-pi-5/)的续篇。前文提过，Raspberry Pi OS 官方内核的 `bcm2712_defconfig` 没有启用 `CONFIG_BLK_DEV_ZONED`，主机管理式叠瓦（Host-Managed SMR，HM-SMR）盘接上以后，内核会直接拒绝为它创建块设备节点。所以想用 HC620，自己编译内核这一步省不掉。
 
@@ -178,6 +178,10 @@ fi
 ```
 
 有两点需要注意。第一，`zoned/cmdline.txt` 是安装时复制的快照，之后只要修改了 `/boot/firmware/cmdline.txt`，例如根分区 PARTUUID、串口控制台、cgroup 或其他内核启动参数，都要重新复制一份到 `zoned/`。第二，本文测试机从 SD 卡上的 ext4 根分区启动，相关存储与文件系统驱动均为内置，实测不需要额外制作 initramfs。如果根分区使用了 btrfs、LUKS、LVM 或特殊存储控制器，或者现有系统本身依赖 initramfs，则需要为自编内核生成匹配的 initramfs 并放入 `zoned/`（`auto_initramfs=1` 时固件按 `kernel_2712.img` 在同目录查找 `initramfs_2712`）。
+
+![](https://img.gulugulublog.com/posts/raspberry-pi-5-kernel-cross-compile-zoned/QQ20260724-211612.png)
+
+不使用 initramfs 引导还存在一个连带问题。内核直接挂载的根文件系统在 `/proc/mounts` 中显示为 `/dev/root`，这并不是一个真实存在的设备节点。Pi OS 默认的 `MODULES=dep` 模式要求 `update-initramfs` 能够解析根设备，因此在运行自编内核期间，任何触发 initramfs 重建的 apt 操作，例如安装带有钩子的软件包或更新官方内核，都会报出 `mkinitramfs: failed to determine device for /` 错误并中断执行，dpkg 会因此停留在未配置完成的状态。解决办法是修改 `/etc/initramfs-tools/initramfs.conf`，将 `MODULES=dep` 改为 `MODULES=most`，然后执行 `sudo dpkg --configure -a` 完成剩余的配置。这一修改的唯一影响是官方内核的 initramfs 体积会略微增大。
 
 重启：
 
