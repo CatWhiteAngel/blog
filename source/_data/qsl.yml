@@ -1,0 +1,90 @@
+# QSL 卡片收发登记
+# 每条记录只有 call 和 sent、received 是必填，其余可留空
+#
+# 字段说明：
+#   call           呼号
+#   sent           我是否已发出卡片（true / false）
+#   sent_date      发出日期（可选，格式为 yyyy-mm-dd）
+#   received       我是否已收到对方的卡（true / false）
+#   received_date  收到日期（可选，格式为 yyyy-mm-dd）
+#   note           备注：确认方式、eyeball QSO 场合等自由文本（可选）
+
+- call: BG0EOQ
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BG5CVB
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BD4XHQ
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BI4JJO
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BG5CBN
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BA7NNC
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BH9FRB
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BH2VQG
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BI4LXI
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BG6TFF
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BI3AMH
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BH4GDP
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BA4QGZ
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BG2GGH
+  sent: true
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BD8DJU
+  sent: false
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
+
+- call: BA4RLR
+  sent: false
+  received: true
+  note: HamCQ 社区，EYEBALL QSO
