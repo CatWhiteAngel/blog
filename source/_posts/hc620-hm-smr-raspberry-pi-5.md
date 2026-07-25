@@ -546,10 +546,6 @@ CONFIG_ZONEFS_FS=m        # 按需，zonefs
 
 需要注意的是，**自编内核不在 apt 更新体系内**，但维护工作可以做得比每次更新后被动重编更有条理。推荐的做法是编译时用 `LOCALVERSION` 起独立版本名（如 `-zoned`），内核镜像安装为独立文件（如 `/boot/firmware/kernel-zoned.img`），并在 `config.txt` 里用 `kernel=kernel-zoned.img` 指定加载。这样官方内核更新只覆盖它自己的 `kernel_2712.img`，与自编内核互不干扰，系统其余部分可以照常 `apt full-upgrade`。维护由此变成主动决定跟版节奏，例如按月跟进一次，交叉编译约消耗二十分钟机器时间，config 改动固化成 fragment 加构建脚本即可。代价是两次跟版之间内核无法获得安全补丁，因此该方案适合内网存储机，不适合暴露面大的场景。另外需要排除一个看似可行的思路：DKMS 式的模块外挂并不存在。`CONFIG_BLK_DEV_ZONED` 是编入内核本体的块层核心选项，`dm-zoned` 和 `zonefs` 模块都依赖它，因此不存在不重编内核的替代路径。
 
-```bash
-# 或也可以尝试向上游提交 issue 或 PR，讨论是否适合在 Pi 5 默认配置中启用 zoned 支持，是否接受则取决于维护者对使用范围和内核配置成本的权衡。
-```
-
 ## 附录 B：解决 Rust coreutils 的 AppArmor 日志刷屏
 
 Ubuntu 26.04 将 coreutils 替换为 Rust 实现（uutils）。新实现下 `who` 等命令启动时会读取本地化目录 `/usr/share/coreutils/locales/`，而配套的 AppArmor profile 没有放行该路径，读取被拒绝后 `who` 没有任何输出。部分 SSH 客户端的远程监控栏每秒调用一次 `who`，每次调用都会写入一条 audit 记录，日志因此持续刷屏。解决方法是向该 profile 的 local 覆盖文件追加一条读取规则。使用 local 覆盖而不是直接修改 profile 本体，是因为软件包更新不会改动 local 文件，规则可以长期保留：
